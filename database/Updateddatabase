@@ -1,0 +1,465 @@
+/*
+
+SQLyog Community v8.55 
+MySQL - 5.5.13 : Database - mydb
+
+*********************************************************************
+
+*/
+
+
+
+/*!40101 SET NAMES utf8 */;
+
+
+
+/*!40101 SET SQL_MODE=''*/;
+
+
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`mydb` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+
+
+USE `mydb`;
+
+
+
+/*Table structure for table `admin` */
+
+
+
+DROP TABLE IF EXISTS `admin`;
+
+
+
+CREATE TABLE `admin` (
+  `admin_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `admin_name` varchar(45) DEFAULT NULL,
+  `user_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`admin_id`),
+  KEY `fk_user1` (`user_id`),
+  CONSTRAINT `fk_user1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+
+
+/*Data for the table `admin` */
+
+
+
+insert  into `admin`(`admin_id`,`admin_name`,`user_id`) values (1,'honey',1);
+
+
+
+/*Table structure for table `advertisement` */
+
+
+
+DROP TABLE IF EXISTS `advertisement`;
+
+
+
+CREATE TABLE `advertisement` (
+  `advertisement_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `item_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`advertisement_id`),
+  KEY `fk_item4` (`item_id`),
+  CONSTRAINT `fk_item4` FOREIGN KEY (`item_id`) REFERENCES `item` (`item_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+/*Data for the table `advertisement` */
+
+
+
+/*Table structure for table `attribute_option` */
+
+
+
+DROP TABLE IF EXISTS `attribute_option`;
+
+
+
+CREATE TABLE `attribute_option` (
+  `attribute_option_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `attribute_option` varchar(45) DEFAULT NULL,
+  `category_attribute_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`attribute_option_id`),
+  KEY `fk_category_attribute1` (`category_attribute_id`),
+  CONSTRAINT `fk_category_attribute1` FOREIGN KEY (`category_attribute_id`) REFERENCES `category_attribute` (`category_attribute_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+/*Data for the table `attribute_option` */
+
+
+
+/*Table structure for table `buyer` */
+
+
+
+DROP TABLE IF EXISTS `buyer`;
+
+
+
+CREATE TABLE `buyer` (
+  `buyer_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `buyer_name` varchar(45) DEFAULT NULL,
+  `buyer_email` varchar(45) DEFAULT NULL,
+  `buyer_mobile` varchar(45) DEFAULT NULL,
+  `user_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`buyer_id`),
+  KEY `fk_user2` (`user_id`),
+  CONSTRAINT `fk_user2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+
+
+/*Data for the table `buyer` */
+
+
+
+insert  into `buyer`(`buyer_id`,`buyer_name`,`buyer_email`,`buyer_mobile`,`user_id`) values (1,'dania','honey@gmail.com','03154343113',2);
+
+
+
+/*Table structure for table `category` */
+
+
+
+DROP TABLE IF EXISTS `category`;
+
+
+
+CREATE TABLE `category` (
+  `category_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `category_name` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+/*Data for the table `category` */
+
+
+
+/*Table structure for table `category_attribute` */
+
+
+
+DROP TABLE IF EXISTS `category_attribute`;
+
+
+
+CREATE TABLE `category_attribute` (
+  `category_attribute_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `category_attribute_name` varchar(45) DEFAULT NULL,
+  `category_attribute_type` enum('radio','text') DEFAULT NULL,
+  `category_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`category_attribute_id`),
+  KEY `fk_category1` (`category_id`),
+  CONSTRAINT `fk_category1` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+/*Data for the table `category_attribute` */
+
+
+
+/*Table structure for table `comment` */
+
+
+
+DROP TABLE IF EXISTS `comment`;
+
+
+
+CREATE TABLE `comment` (
+  `comment_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `comment` varchar(45) DEFAULT NULL,
+  `buyer_id` bigint(20) NOT NULL,
+  `item_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`comment_id`),
+  KEY `fk_buyer4` (`buyer_id`),
+  KEY `fk_item3` (`item_id`),
+  CONSTRAINT `fk_buyer4` FOREIGN KEY (`buyer_id`) REFERENCES `buyer` (`buyer_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_item3` FOREIGN KEY (`item_id`) REFERENCES `item` (`item_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+/*Data for the table `comment` */
+
+
+
+/*Table structure for table `item` */
+
+
+
+DROP TABLE IF EXISTS `item`;
+
+
+
+CREATE TABLE `item` (
+  `item_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `item_name` varchar(45) DEFAULT NULL,
+  `category_id` bigint(20) NOT NULL,
+  `seller_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`item_id`),
+  KEY `fk_category2` (`category_id`),
+  KEY `fk_seller4` (`seller_id`),
+  CONSTRAINT `fk_category2` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_seller4` FOREIGN KEY (`seller_id`) REFERENCES `seller` (`seller_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+/*Data for the table `item` */
+
+
+
+/*Table structure for table `item_attribute` */
+
+
+
+DROP TABLE IF EXISTS `item_attribute`;
+
+
+
+CREATE TABLE `item_attribute` (
+  `item_attribute_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `category_attribute_id` bigint(20) NOT NULL,
+  `item_id` bigint(20) NOT NULL,
+  `value` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`item_attribute_id`),
+  KEY `fk_category_attribute2` (`category_attribute_id`),
+  KEY `fk_item1` (`item_id`),
+  CONSTRAINT `fk_category_attribute2` FOREIGN KEY (`category_attribute_id`) REFERENCES `category_attribute` (`category_attribute_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_item1` FOREIGN KEY (`item_id`) REFERENCES `item` (`item_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+/*Data for the table `item_attribute` */
+
+
+
+/*Table structure for table `messages` */
+
+
+
+DROP TABLE IF EXISTS `messages`;
+
+
+
+CREATE TABLE `messages` (
+  `messages_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `message` varchar(45) DEFAULT NULL,
+  `sender_role` bigint(20) DEFAULT NULL,
+  `sender_user_id` bigint(20) NOT NULL,
+  `receiver_user_id` bigint(20) NOT NULL,
+  `dateTime` datetime DEFAULT NULL,
+  `receiver_role` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`messages_id`),
+  KEY `fk_login1` (`sender_user_id`),
+  CONSTRAINT `fk_login1` FOREIGN KEY (`sender_user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+/*Data for the table `messages` */
+
+
+
+/*Table structure for table `rating` */
+
+
+
+DROP TABLE IF EXISTS `rating`;
+
+
+
+CREATE TABLE `rating` (
+  `ratting_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `item_id` bigint(20) NOT NULL,
+  `rating` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`ratting_id`),
+  KEY `fk_item5` (`item_id`),
+  CONSTRAINT `fk_item5` FOREIGN KEY (`item_id`) REFERENCES `item` (`item_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+/*Data for the table `rating` */
+
+
+
+/*Table structure for table `reported_comment` */
+
+
+
+DROP TABLE IF EXISTS `reported_comment`;
+
+
+
+CREATE TABLE `reported_comment` (
+  `reported_comments_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `comment_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`reported_comments_id`),
+  KEY `fk_comment1` (`comment_id`),
+  CONSTRAINT `fk_comment1` FOREIGN KEY (`comment_id`) REFERENCES `comment` (`comment_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+/*Data for the table `reported_comment` */
+
+
+
+/*Table structure for table `reported_profile` */
+
+
+
+DROP TABLE IF EXISTS `reported_profile`;
+
+
+
+CREATE TABLE `reported_profile` (
+  `reported_profile_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `seller_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`reported_profile_id`),
+  KEY `fk_seller2` (`seller_id`),
+  CONSTRAINT `fk_seller2` FOREIGN KEY (`seller_id`) REFERENCES `seller` (`seller_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+/*Data for the table `reported_profile` */
+
+
+
+/*Table structure for table `seller` */
+
+
+
+DROP TABLE IF EXISTS `seller`;
+
+
+
+CREATE TABLE `seller` (
+  `seller_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `category_id` bigint(20) NOT NULL,
+  `seller_first_name` varchar(45) NOT NULL,
+  `seller_last_name` varchar(45) DEFAULT NULL,
+  `seller_location` varchar(45) DEFAULT NULL,
+  `seller_mobile` varchar(45) DEFAULT NULL,
+  `seller_business_name` varchar(45) DEFAULT NULL,
+  `user_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`seller_id`),
+  KEY `fk_user3` (`user_id`),
+  CONSTRAINT `fk_user3` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+/*Data for the table `seller` */
+
+
+
+/*Table structure for table `subscription` */
+
+
+
+DROP TABLE IF EXISTS `subscription`;
+
+
+
+CREATE TABLE `subscription` (
+  `subscriptipn_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `seller_id` bigint(20) NOT NULL,
+  `buyer_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`subscriptipn_id`),
+  KEY `fk_seller1` (`seller_id`),
+  KEY `fk_buyer5` (`buyer_id`),
+  CONSTRAINT `fk_seller1` FOREIGN KEY (`seller_id`) REFERENCES `seller` (`seller_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_buyer5` FOREIGN KEY (`buyer_id`) REFERENCES `buyer` (`buyer_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+/*Data for the table `subscription` */
+
+
+
+/*Table structure for table `users` */
+
+
+
+DROP TABLE IF EXISTS `users`;
+
+
+
+CREATE TABLE `users` (
+  `user_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `password` varchar(45) NOT NULL,
+  `user_name` varchar(45) DEFAULT NULL,
+  `role` bigint(20) DEFAULT NULL,
+  `user_email` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+
+
+/*Data for the table `users` */
+
+
+
+insert  into `users`(`user_id`,`password`,`user_name`,`role`,`user_email`) values (1,'honey','honey',1,'honey@hotmailc.com'),(2,'honey','dania',2,'honey@gmail.com');
+
+
+
+/*Table structure for table `wishlist` */
+
+
+
+DROP TABLE IF EXISTS `wishlist`;
+
+
+
+CREATE TABLE `wishlist` (
+  `wishlist_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `buyer_id` bigint(20) NOT NULL,
+  `item_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`wishlist_id`),
+  KEY `fk_buyer3` (`buyer_id`),
+  KEY `fk_item2` (`item_id`),
+  CONSTRAINT `fk_buyer3` FOREIGN KEY (`buyer_id`) REFERENCES `buyer` (`buyer_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_item2` FOREIGN KEY (`item_id`) REFERENCES `item` (`item_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+/*Data for the table `wishlist` */
+
+
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
